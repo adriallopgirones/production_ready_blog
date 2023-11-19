@@ -24,9 +24,7 @@ THIRD_PARTY_APPS = [
     "rest_framework",
 ]
 
-LOCAL_APPS = [
-    "core_apps.blog",  # TODO: define
-]
+LOCAL_APPS = ["core_apps.blogs", "core_apps.users", "core_apps.common"]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 

@@ -14,4 +14,4 @@ SECRET_KEY = (
 DEBUG = True
 
 # TODO: Use CRFS
-ALLOWED_HOSTS = ["http://localhost:8000"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
