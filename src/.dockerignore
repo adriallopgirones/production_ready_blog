@@ -1,0 +1,7 @@
+# Files that we don't want to go into the iamge
+
+.idea
+venv
+**/.git
+.gitignore
+.vscode

@@ -1,14 +1,32 @@
 from pathlib import Path
 import environ
+import os
 
 env = environ.Env()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent
 
 APP_DIR = ROOT_DIR / "core_apps"
 
+# This env variable is placed in the Dockerfile
+AM_I_IN_DOCKER_CONTAINER = env.bool("AM_I_IN_DOCKER_CONTAINER", False)
+
+# When running in a docker container, we set the env variables in the docker-compose.yml file
+# so we don't need to do read_env, but if we want to run the project locally outside of docker
+# we need to read the env variables manually
+if not AM_I_IN_DOCKER_CONTAINER:
+    # When outside of a docker container always load local envs
+    django_env_local = os.path.join(ROOT_DIR, ".envs", ".local", ".django")
+    postgres_env_local = os.path.join(ROOT_DIR, ".envs", ".local", ".postgres")
+
+    env.read_env(django_env_local)
+    env.read_env(postgres_env_local)
+
+
 DEBUG = env.bool("DJANGO_DEBUG", False)
+
 
 # Application definition
 
@@ -56,18 +74,20 @@ TEMPLATES = [
     },
 ]
 
+DATABASES = {"default": env.db()}
+
+# In docker the host is set as postgres, that fails locally
+# Important!!: If you have started a postgres connection before in your computer
+# you need to create a new user and a database with the same values as in the .envs/.local/.postgres file
+if not AM_I_IN_DOCKER_CONTAINER:
+    DATABASES["default"]["HOST"] = "127.0.0.1"
+
+
 WSGI_APPLICATION = "production_ready_blog_project.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": "mydatabase",
-    }
-}
 
 
 # Password validation
@@ -106,6 +126,7 @@ ADMIN_URL = "admin/"
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = str(ROOT_DIR / "staticfiles")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

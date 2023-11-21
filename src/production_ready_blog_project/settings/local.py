@@ -1,5 +1,5 @@
 from .base import *  # noqa
-from .base import env
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # Ran python -c "import secrets; print(secrets.token_urlsafe(38))" to obtain a new secret key
