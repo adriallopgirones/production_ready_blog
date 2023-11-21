@@ -4,8 +4,9 @@ from rest_framework import routers
 
 # Router helps us to avoid writing url patterns like randomview/{pk}/
 router = routers.DefaultRouter()
-router.register(r"blog_posts", BlogPostViewSet, basename="blog_post")
+router.register(r"", BlogPostViewSet, basename="blog_post")
 
+print(router.urls)
 urlpatterns = [
     path("", include(router.urls)),
 ]
