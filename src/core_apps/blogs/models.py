@@ -1,8 +1,9 @@
 from django.db import models
+from core_apps.common.models import BaseModel
 from core_apps.users.models import PublicProfile
 
 
-class BlogPost(models.Model):
+class BlogPost(BaseModel):
     """
     Model for a blog post
     """
