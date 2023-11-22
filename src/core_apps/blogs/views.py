@@ -1,8 +1,6 @@
 from rest_framework import viewsets, permissions
 from rest_framework.authentication import (
     TokenAuthentication,
-    SessionAuthentication,
-    BasicAuthentication,
 )
 
 from core_apps.common.permissions import IsAdminToPutPatchOrDelete

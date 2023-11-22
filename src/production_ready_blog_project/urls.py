@@ -6,6 +6,6 @@ from rest_framework.authtoken import views
 urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
     # TODO: Look into something more robust for authentication
-    path("api-token-auth/", views.obtain_auth_token),
+    path("api/v1/api-token-auth/", views.obtain_auth_token),
     path("api/v1/blog_posts/", include("core_apps.blogs.urls")),
 ]

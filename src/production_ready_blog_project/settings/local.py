@@ -13,5 +13,8 @@ SECRET_KEY = (
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# TODO: Use CRFS
+# TODO: Do we need CORS, I can't think of a reason why we would in the context of
+# a backend for a smartphone app
+# CORS it's a security feature used by webrowers to prevent cross site scripting
+# for example www.google.com can't make a request to www.facebook.com
 ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
