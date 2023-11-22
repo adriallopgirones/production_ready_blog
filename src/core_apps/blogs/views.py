@@ -14,12 +14,8 @@ from core_apps.blogs.serializers import BlogPostSerializer
 class BlogPostViewSet(viewsets.ModelViewSet):
     queryset = BlogPost.objects.all()
     serializer_class = BlogPostSerializer
-    # permission_classes = [permissions.IsAuthenticated, IsAdminToPutPatchOrDelete]
-    # authentication_classes = [
-    #     SessionAuthentication,
-    #     BasicAuthentication,
-    #     TokenAuthentication,
-    # ]
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
 
     def perform_create(self, serializer):
         # Retrieve the Public Profile of the user
