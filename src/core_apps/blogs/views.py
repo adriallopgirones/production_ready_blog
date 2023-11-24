@@ -3,7 +3,6 @@ from rest_framework.authentication import (
     TokenAuthentication,
 )
 
-from core_apps.common.permissions import IsAdminToPutPatchOrDelete
 from core_apps.users.models import PublicProfile
 from core_apps.blogs.models import BlogPost
 from core_apps.blogs.serializers import BlogPostSerializer

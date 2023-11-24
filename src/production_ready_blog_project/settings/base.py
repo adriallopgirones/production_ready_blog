@@ -132,7 +132,10 @@ ADMIN_URL = "admin/"
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/staticfiles/"
+
+# python manage.py collectstatic will collect all static files and put them here
+# this was it is more efficent for nginx to serve them
 STATIC_ROOT = str(ROOT_DIR / "staticfiles")
 
 # Default primary key field type
