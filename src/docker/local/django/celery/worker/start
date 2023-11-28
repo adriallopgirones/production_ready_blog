@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -o errexit
+set -o nounset
+
+# Start a celery worker, watchfiles is used to restart the worker when code changes only in development
+exec watchfiles celery.__main__.main --args "-A production_ready_blog_project.celery worker -l INFO"

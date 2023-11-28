@@ -142,3 +142,20 @@ STATIC_ROOT = str(ROOT_DIR / "staticfiles")
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+CELERY_BROKER_URL = env("CELERY_BROKER")
+
+# Using Redis as broker and result backend
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+
+# List of content types that the worker can deserialize
+CELERY_ACCEPT_CONTENT = ["json"]
+# Serialization for takss before sending them to the broker
+CELERY_TASK_SERIALIZER = "json"
+# Serialization format for task results
+CELERY_RESULT_SERIALIZER = "json"
+# maximum number of retries that should be attempted when storing task results in the result backend.
+CELERY_RESULT_BACKEND_MAX_RETRIES = 10
+# Celery will send an event every time a task is sent (Can be caught and used for monitoring)
+CELERY_TASK_SEND_SENT_EVENT = True
+CELERY_TIMEZONE = TIME_ZONE
