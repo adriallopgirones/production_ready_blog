@@ -9,3 +9,9 @@ down:
 
 show-logs:
 	docker compose -f local.yml logs
+
+local-celery:
+	celery -A production_ready_blog_project.celery worker --loglevel=info
+
+local-redis:
+	redis-server

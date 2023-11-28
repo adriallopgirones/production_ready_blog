@@ -145,6 +145,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CELERY_BROKER_URL = env("CELERY_BROKER")
 
+# In docker the celery broker host needs to be "redis" which fails locally
+if not AM_I_IN_DOCKER_CONTAINER:
+    CELERY_BROKER_URL = CELERY_BROKER_URL.replace("//redis", "//127.0.0.1")
+
 # Using Redis as broker and result backend
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 

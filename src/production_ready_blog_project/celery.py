@@ -3,7 +3,9 @@ import os
 from celery import Celery
 from django.conf import settings
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "authors_api.settings.local")
+os.environ.setdefault(
+    "DJANGO_SETTINGS_MODULE", "production_ready_blog_project.settings.local"
+)
 
 app = Celery("production_ready_blog_project")
 

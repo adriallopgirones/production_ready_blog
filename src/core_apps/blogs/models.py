@@ -10,6 +10,7 @@ class BlogPost(BaseModel):
 
     title = models.TextField(max_length=150, blank=False, null=False)
     content = models.TextField(max_length=500, blank=False, null=False)
+    sentiment = models.CharField(max_length=50, blank=True, null=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
