@@ -25,6 +25,7 @@ class BlogPostViewSet(viewsets.ModelViewSet):
             # Making different queries for related objects can lead to N+1 problem.
 
             return BlogPost.objects.all().prefetch_related("comments")
+        return self.queryset
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)

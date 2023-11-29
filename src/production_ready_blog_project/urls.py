@@ -8,4 +8,5 @@ urlpatterns = [
     # TODO: Look into something more robust for authentication
     path("api/v1/api-token-auth/", views.obtain_auth_token),
     path("api/v1/blog_posts/", include("core_apps.blogs.urls")),
+    path("api/v1/public_profiles/", include("core_apps.users.urls")),
 ]
