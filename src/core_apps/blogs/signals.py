@@ -1,5 +1,6 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+
 from core_apps.blogs.models import BlogPost
 from core_apps.blogs.tasks import analyze_sentiment
 

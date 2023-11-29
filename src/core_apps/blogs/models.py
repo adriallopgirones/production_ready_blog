@@ -1,6 +1,7 @@
-from django.db import models
-from core_apps.common.models import BaseModel
 from django.contrib.auth.models import User
+from django.db import models
+
+from core_apps.common.models import BaseModel
 
 
 class BlogPost(BaseModel):

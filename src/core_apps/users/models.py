@@ -1,8 +1,8 @@
-from django.db import models
-from core_apps.common.models import BaseModel
-
 # TODO: Does the default User model from Django works well enough for us?
 from django.contrib.auth.models import User
+from django.db import models
+
+from core_apps.common.models import BaseModel
 
 
 class PublicProfile(BaseModel):

@@ -1,6 +1,7 @@
-from django.urls import path, include
-from core_apps.blogs.views import BlogPostViewSet
+from django.urls import include, path
 from rest_framework import routers
+
+from core_apps.blogs.views import BlogPostViewSet
 
 # Router helps us to avoid writing url patterns like randomview/{pk}/
 router = routers.DefaultRouter()

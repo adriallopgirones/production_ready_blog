@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from core_apps.blogs.models import BlogPost, BlogPostComment
 
 
@@ -10,6 +11,7 @@ class BlogPostCommentSerializer(serializers.ModelSerializer):
 
 
 class BlogPostSerializer(serializers.ModelSerializer):
+    # comments is the related_name for the BlogPost foreign key in the BlogPostComment model
     comments = BlogPostCommentSerializer(many=True, read_only=True)
 
     class Meta:

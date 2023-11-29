@@ -1,7 +1,5 @@
-from rest_framework import viewsets, permissions
-from rest_framework.authentication import (
-    TokenAuthentication,
-)
+from rest_framework import permissions, viewsets
+from rest_framework.authentication import TokenAuthentication
 
 from core_apps.blogs.models import BlogPost
 from core_apps.blogs.serializers import BlogPostSerializer

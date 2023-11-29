@@ -9,5 +9,6 @@
         "--ignore=E501,W503,W504,E203",
         "--max-complexity=10",
       ],
+    "isort.args": ["--profile", "black"],
 
 }

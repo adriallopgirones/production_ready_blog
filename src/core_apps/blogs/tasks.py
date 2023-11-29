@@ -1,6 +1,7 @@
+import requests
 from celery import shared_task
 from django.db import transaction
-import requests
+
 from core_apps.blogs.models import BlogPost
 
 
@@ -11,8 +12,8 @@ def analyze_sentiment(blog_post_uuid):
     -----
     This is performed asynchronously by Celery (that's why we use the sared_task decorator)
     When the user creates a blog post, it gets stored right away in the database, but the
-    sentiment field is left empty. This task is triggered after the blog post is created and
-    updates the sentiment field.
+    sentiment field is left empty. This task is triggered by a signal after the blog post is created
+    and updates the sentiment field.
     -----
     """
     try:
