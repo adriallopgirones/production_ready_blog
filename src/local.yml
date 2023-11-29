@@ -15,6 +15,7 @@ services:
             # :z is used to apply a SELinux label for proper access control
             - .:/app:z
             - static_volume:/app/staticfiles
+            - media_volume:/app/mediafiles
         expose:
             # Gives access to this port for services in the container e.g. nginx
             -  "8000"
@@ -59,6 +60,7 @@ services:
         networks:
             - blogs-api
 
+    # Docker handles starting the starting of these services (it knows how to type the appropriate command)
     nginx:
         # Restarts if exit regardless of exit code
         restart: always
@@ -80,4 +82,5 @@ networks:
 
 volumes:
     static_volume:
+    media_volume:
     local_postgres_data: {}

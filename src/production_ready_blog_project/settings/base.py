@@ -139,6 +139,9 @@ STATIC_URL = "/staticfiles/"
 # this was it is more efficent for nginx to serve them
 STATIC_ROOT = str(ROOT_DIR / "staticfiles")
 
+MEDIA_URL = "/mediafiles/"
+MEDIA_ROOT = str(ROOT_DIR / "mediafiles")
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 

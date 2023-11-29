@@ -1,3 +1,7 @@
+# static and media files
+staticfiles/
+mediafiles/
+
 # envs
 .envs/*
 !.envs/.local/
