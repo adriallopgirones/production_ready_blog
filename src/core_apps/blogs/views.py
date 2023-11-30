@@ -1,3 +1,4 @@
+from django.views.decorators.cache import cache_page
 from rest_framework import permissions, viewsets
 from rest_framework.authentication import TokenAuthentication
 
@@ -29,6 +30,18 @@ class BlogPostViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+    # Doing per-view caching, we'll store the result of this view in the cache for 5 minutes using redis
+    @cache_page(60 * 1)  # Cache the response for 5 minutes
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    """
+    What we do above is useful if we are interested in caching the entire response, if we need something
+    more specific like returning a feed to a user (every user needs a different response) we could use
+    @method_decorator(cache_page(60 * 5, key_func=_made_up_name_unique_for_each_user))
+    or use from django.core.cache import cache cache.set() and cache.get()
+    """
 
 
 class BlogPostCommentViewSet(viewsets.ModelViewSet):

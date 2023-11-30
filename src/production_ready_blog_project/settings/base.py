@@ -84,7 +84,7 @@ TEMPLATES = [
 
 DATABASES = {"default": env.db()}
 
-# In docker the host is set as postgres, that fails locally
+# In docker the host is set as postgres (name of the container), that fails locally
 # Important!!: If you have started a postgres connection before in your computer
 # you need to create a new user and a database with the same values as in the .envs/.local/.postgres file
 if not AM_I_IN_DOCKER_CONTAINER:
@@ -147,11 +147,24 @@ MEDIA_ROOT = str(ROOT_DIR / "mediafiles")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# They use the same host for redis, but point to different DBs
 CELERY_BROKER_URL = env("CELERY_BROKER")
+REDIS_CACHE_URL = env("REDIS_CACHE_URL")
 
 # In docker the celery broker host needs to be "redis" which fails locally
 if not AM_I_IN_DOCKER_CONTAINER:
     CELERY_BROKER_URL = CELERY_BROKER_URL.replace("//redis", "//127.0.0.1")
+    REDIS_CACHE_URL = REDIS_CACHE_URL.replace("//redis", "//127.0.0.1")
+
+
+# Redis cache configuration
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": REDIS_CACHE_URL,
+        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
+    }
+}
 
 # Using Redis as broker and result backend
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL
