@@ -182,10 +182,13 @@ CELERY_RESULT_BACKEND_MAX_RETRIES = 10
 CELERY_TASK_SEND_SENT_EVENT = True
 CELERY_TIMEZONE = TIME_ZONE
 
+# TODO: Maybe place one init in local and one in production, with different profiles_sample_rate
 # Sentry configuration
 sentry_sdk.init(
     dsn="https://c201292240caf8d4043d3a30c37ca102@o4506348845400064.ingest.sentry.io/4506348846841856",
     enable_tracing=True,
+    # Track which user is sending requests
     traces_sample_rate=1.0,
+    # Percentage of requests to be profiled (see how code is performing)
     profiles_sample_rate=1.0,
 )
