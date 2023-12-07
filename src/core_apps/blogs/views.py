@@ -8,6 +8,7 @@ from core_apps.blogs.serializers import (
     BlogPostSerializer,
     BlogPostSerializerWithComments,
 )
+from core_apps.common.decorators import catch_redis_down
 from core_apps.common.permissions import IsOwnerOrReadOnly
 
 
@@ -43,7 +44,9 @@ class BlogPostViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
     # Doing per-view caching, we'll store the result of this view in the cache for 5 minutes using redis
-    @method_decorator(cache_page(60 * 1))  # Cache the response for 5 minutes
+    @method_decorator(
+        catch_redis_down(cache_page(60 * 1))
+    )  # Cache the response for 5 minutes
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 

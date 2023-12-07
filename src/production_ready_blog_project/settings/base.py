@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 import environ
+import sentry_sdk
 
 env = environ.Env()
 
@@ -180,3 +181,11 @@ CELERY_RESULT_BACKEND_MAX_RETRIES = 10
 # Celery will send an event every time a task is sent (Can be caught and used for monitoring)
 CELERY_TASK_SEND_SENT_EVENT = True
 CELERY_TIMEZONE = TIME_ZONE
+
+# Sentry configuration
+sentry_sdk.init(
+    dsn="https://c201292240caf8d4043d3a30c37ca102@o4506348845400064.ingest.sentry.io/4506348846841856",
+    enable_tracing=True,
+    traces_sample_rate=1.0,
+    profiles_sample_rate=1.0,
+)
