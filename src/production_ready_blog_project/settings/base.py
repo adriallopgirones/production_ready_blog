@@ -1,8 +1,10 @@
+import logging
 import os
 from pathlib import Path
 
 import environ
 import sentry_sdk
+from sentry_sdk.integrations.logging import LoggingIntegration
 
 env = environ.Env()
 
@@ -29,6 +31,41 @@ if not AM_I_IN_DOCKER_CONTAINER:
 
 DEBUG = env.bool("DJANGO_DEBUG", False)
 
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": "INFO",
+        },
+        "core_apps.blogs": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+        },
+        "core_apps.common": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+        },
+        "core_apps.users": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+        },
+    },
+}
 
 # Application definition
 
@@ -182,13 +219,16 @@ CELERY_RESULT_BACKEND_MAX_RETRIES = 10
 CELERY_TASK_SEND_SENT_EVENT = True
 CELERY_TIMEZONE = TIME_ZONE
 
-# TODO: Maybe place one init in local and one in production, with different profiles_sample_rate
-# Sentry configuration
-sentry_sdk.init(
-    dsn="https://c201292240caf8d4043d3a30c37ca102@o4506348845400064.ingest.sentry.io/4506348846841856",
-    enable_tracing=True,
-    # Track which user is sending requests
-    traces_sample_rate=1.0,
-    # Percentage of requests to be profiled (see how code is performing)
-    profiles_sample_rate=1.0,
-)
+# Probably we only want sentry on in production
+SENTRY_DSN = env.str("SENTRY_DSN", None)
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        # Log in sentry logs from info level and above
+        integrations=[LoggingIntegration(level=logging.INFO, event_level=logging.INFO)],
+        enable_tracing=True,
+        # Track which user is sending requests
+        traces_sample_rate=1.0,
+        # Percentage of requests to be profiled (see how code is performing)
+        profiles_sample_rate=env.float("SENTRY_PROFILES_SAMPLE_RATE", 0.1),
+    )

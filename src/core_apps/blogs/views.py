@@ -1,3 +1,5 @@
+import logging
+
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from rest_framework import permissions, viewsets
@@ -10,6 +12,8 @@ from core_apps.blogs.serializers import (
 )
 from core_apps.common.decorators import catch_redis_down
 from core_apps.common.permissions import IsOwnerOrReadOnly
+
+logger = logging.getLogger(__name__)
 
 
 class BlogPostViewSet(viewsets.ModelViewSet):
@@ -26,8 +30,10 @@ class BlogPostViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == "list":
+            logger.debug("List of Blog Posts requested")
             # Return serializer without comments for list action
             return BlogPostSerializer
+        logger.debug("Single Blog Post requested")
         # Return serializer with comments for retrieve action
         return BlogPostSerializerWithComments
 

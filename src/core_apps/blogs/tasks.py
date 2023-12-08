@@ -1,8 +1,12 @@
+import logging
+
 import requests
 from celery import shared_task
 from django.db import transaction
 
 from core_apps.blogs.models import BlogPost
+
+logger = logging.getLogger(__name__)
 
 
 @shared_task
@@ -32,7 +36,8 @@ def analyze_sentiment(blog_post_uuid):
             blog_post.save()
 
     except BlogPost.DoesNotExist:
-        # TODO: logging
-        print(f"Blog Post with id {blog_post_uuid} does not exist.")
+        logger.info(f"Blog Post with id {blog_post_uuid} does not exist.")
     except Exception as e:
-        print(f"Error analyzing sentiment for article {blog_post_uuid}: {str(e)}")
+        logger.error(
+            f"Error analyzing sentiment for article {blog_post_uuid}: {str(e)}"
+        )

@@ -1,9 +1,12 @@
 """
 Some decorators used across the project
 """
+import logging
 from functools import wraps
 
 import redis
+
+logger = logging.getLogger(__name__)
 
 
 def catch_redis_down(cache_decorator):
@@ -22,7 +25,9 @@ def catch_redis_down(cache_decorator):
             try:
                 return cache_decorated_view_func(*args, **kwargs)
             except redis.ConnectionError:
-                # TODO: log the error
+                logger.error(
+                    f"Redis is down, returning view without caching in: {view_func.__name__}"
+                )
                 return view_func(*args, **kwargs)
 
         return wrapper
