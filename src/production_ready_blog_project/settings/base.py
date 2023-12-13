@@ -64,25 +64,36 @@ LOGGING = {
             "handlers": ["console"],
             "level": "DEBUG",
         },
+        "core_apps.chat": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+        },
     },
 }
 
 # Application definition
 
 DJANGO_APPS = [
+    "daphne",  # Needs to be listed the first one, because other packages can tweak the runserver command
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "rest_framework.authtoken",
 ]
 THIRD_PARTY_APPS = [
     "rest_framework",
+    "rest_framework.authtoken",
+    "channels",
 ]
 
-LOCAL_APPS = ["core_apps.blogs", "core_apps.users", "core_apps.common"]
+LOCAL_APPS = [
+    "core_apps.blogs",
+    "core_apps.users",
+    "core_apps.common",
+    "core_apps.chat",
+]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
@@ -128,9 +139,40 @@ DATABASES = {"default": env.db()}
 if not AM_I_IN_DOCKER_CONTAINER:
     DATABASES["default"]["HOST"] = "127.0.0.1"
 
+# They use the same host for redis, but point to different DBs
+CELERY_BROKER_URL = env.str("CELERY_BROKER", None)
+REDIS_CACHE_URL = env.str("REDIS_CACHE_URL", None)
+REDIS_SOCKETS_URL = env.str("REDIS_SOCKETS_URL", None)
+
+# In docker the celery broker host needs to be "redis" which fails locally
+if not AM_I_IN_DOCKER_CONTAINER:
+    if CELERY_BROKER_URL:
+        CELERY_BROKER_URL = CELERY_BROKER_URL.replace("//redis", "//127.0.0.1")
+    if REDIS_CACHE_URL:
+        REDIS_CACHE_URL = REDIS_CACHE_URL.replace("//redis", "//127.0.0.1")
+    if REDIS_SOCKETS_URL:
+        REDIS_SOCKETS_URL = REDIS_SOCKETS_URL.replace("//redis", "//127.0.0.1")
+
 
 WSGI_APPLICATION = "production_ready_blog_project.wsgi.application"
+ASGI_APPLICATION = "production_ready_blog_project.asgi.application"
 
+if REDIS_SOCKETS_URL:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [REDIS_SOCKETS_URL],
+            },
+        },
+    }
+# Use in memory channel layer for when it's not specified, i.e. testing
+else:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.InMemoryChannelLayer",
+        },
+    }
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -185,24 +227,15 @@ MEDIA_ROOT = str(ROOT_DIR / "mediafiles")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# They use the same host for redis, but point to different DBs
-CELERY_BROKER_URL = env("CELERY_BROKER")
-REDIS_CACHE_URL = env("REDIS_CACHE_URL")
-
-# In docker the celery broker host needs to be "redis" which fails locally
-if not AM_I_IN_DOCKER_CONTAINER:
-    CELERY_BROKER_URL = CELERY_BROKER_URL.replace("//redis", "//127.0.0.1")
-    REDIS_CACHE_URL = REDIS_CACHE_URL.replace("//redis", "//127.0.0.1")
-
-
 # Redis cache configuration
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": REDIS_CACHE_URL,
-        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
+if REDIS_CACHE_URL:
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": REDIS_CACHE_URL,
+            "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
+        }
     }
-}
 
 # Using Redis as broker and result backend
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL

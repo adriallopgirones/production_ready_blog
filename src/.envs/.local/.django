@@ -1,3 +1,4 @@
 # /0 and /1 mean different DB's inside of redis
 CELERY_BROKER=redis://redis:6379/0
 REDIS_CACHE_URL=redis://redis:6379/1
+#REDIS_SOCKETS_URL=redis://redis:6379/2
