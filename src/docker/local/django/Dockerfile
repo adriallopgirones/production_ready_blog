@@ -66,9 +66,16 @@ COPY ./docker/local/django/start /start
 RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
 
+# Docker-compose will use COMMAND start-celeryworker to actually run this
 COPY ./docker/local/django/celery/worker/start /start-celeryworker
 RUN sed -i 's/\r$//g' /start-celeryworker
 RUN chmod +x /start-celeryworker
+
+# Command for daphne server for ws connections
+COPY ./docker/local/django/daphne/start /start-daphne
+RUN sed -i 's/\r$//g' /start-daphne
+RUN chmod +x /start-daphne
+
 
 COPY . ${APP_HOME}
 

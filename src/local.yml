@@ -47,6 +47,7 @@ services:
     celery_worker:
         build:
             context: .
+            # It's okay to use the same Dockerfile, there won't be redundant installs, etc.
             dockerfile: ./docker/local/django/Dockerfile
         command: /start-celeryworker
         volumes:
@@ -60,7 +61,25 @@ services:
         networks:
             - blogs-api
 
-    # Docker handles starting the starting of these services (it knows how to type the appropriate command)
+    websockets:
+        build:
+            context: .
+            dockerfile: ./docker/local/django/Dockerfile
+        command: /start-daphne
+        volumes:
+            - .:/app
+        env_file:
+            - ./.envs/.local/.django
+            - ./.envs/.local/.postgres
+        depends_on:
+            - redis
+            - postgres
+        expose:
+            - "8001"  # Expose the port for WebSocket connections
+        networks:
+            - blogs-api
+
+    # Docker handles the starting of these services (it knows how to type the appropriate command)
     nginx:
         # Restarts if exit regardless of exit code
         restart: always
@@ -68,11 +87,13 @@ services:
             - api
         volumes:
             - static_volume:/app/staticfiles
+            - media_volume:/app/mediafiles
         build:
             context: ./docker/local/nginx
             dockerfile: Dockerfile
         ports:
-            - "8080:80"
+            - "8000:80"
+            - "8001:80"
         networks:
             - blogs-api
 
