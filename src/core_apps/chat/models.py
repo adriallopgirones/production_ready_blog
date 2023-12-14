@@ -10,4 +10,4 @@ class Message(BaseModel):
     room_group_name = models.CharField(null=True, blank=True, max_length=200)
 
     def __str__(self) -> str:
-        return f"{self.owner.username} on {self.thread_name}: {self.message}"
+        return f"{self.owner.username} on {self.room_group_name}: {self.message}"
