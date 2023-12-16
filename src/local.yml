@@ -3,10 +3,11 @@ version: "3.9"
 
 services:
     api:
+        image: django_image # Basically gives a name/tag to the image
         build:
             context: .
             dockerfile: ./docker/local/django/Dockerfile
-        command: /start
+        command: /start # Gets called after the container is created
         # Don't need to declare a volume for static data here because it
         # is handled by .:/app:z, so it would work anyways without nginx
         volumes:
@@ -45,10 +46,13 @@ services:
             - blogs-api
 
     celery_worker:
-        build:
-            context: .
-            # It's okay to use the same Dockerfile, there won't be redundant installs, etc.
-            dockerfile: ./docker/local/django/Dockerfile
+        image: django_image
+        # Original tutorial did the thing below
+        # This created a new entirely image wasting a bunch of resources
+        # Doing it this way seems to work fine, reference: https://github.com/docker/compose/issues/963
+        # build:
+        #     context: .
+        #     dockerfile: ./docker/local/django/Dockerfile
         command: /start-celeryworker
         volumes:
             - .:/app
@@ -56,15 +60,17 @@ services:
             - ./.envs/.local/.django
             - ./.envs/.local/.postgres
         depends_on:
+            - api
             - redis
             - postgres
         networks:
             - blogs-api
 
     websockets:
-        build:
-            context: .
-            dockerfile: ./docker/local/django/Dockerfile
+        image: django_image
+        # build:
+        #     context: .
+        #     dockerfile: ./docker/local/django/Dockerfile
         command: /start-daphne
         volumes:
             - .:/app
@@ -72,6 +78,7 @@ services:
             - ./.envs/.local/.django
             - ./.envs/.local/.postgres
         depends_on:
+            - api
             - redis
             - postgres
         expose:
@@ -85,6 +92,7 @@ services:
         restart: always
         depends_on:
             - api
+            - websockets
         volumes:
             - static_volume:/app/staticfiles
             - media_volume:/app/mediafiles
@@ -92,7 +100,7 @@ services:
             context: ./docker/local/nginx
             dockerfile: Dockerfile
         ports:
-            - "8000:80"
+            - "8000:80" # Matches port within docker container to port on host machine
             - "8001:80"
         networks:
             - blogs-api

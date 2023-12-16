@@ -17,7 +17,7 @@ DEBUG = True
 # for example www.google.com can't make a request to www.facebook.com
 
 
-# When running on nginx the origin is 8000 and we need to add it here
-CSRF_TRUSTED_ORIGINS = ["http://localhost:8000"]
+# When running on nginx the origin is 8000 or 8001 and we need to add it here
+CSRF_TRUSTED_ORIGINS = ["http://localhost:8000", "http://localhost:8001"]
 
 ALLOWED_HOSTS = ["127.0.0.1", "localhost"]

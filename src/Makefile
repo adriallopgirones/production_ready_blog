@@ -7,6 +7,8 @@ up:
 down:
 	docker compose -f local.yml down
 
+down-remove:
+	docker-compose -f local.yml down -v --rmi all
 show-logs:
 	docker compose -f local.yml logs
 
