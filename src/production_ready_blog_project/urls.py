@@ -10,4 +10,5 @@ urlpatterns = [
     path("api/v1/blog_posts/", include("core_apps.blogs.urls")),
     path("api/v1/public_profiles/", include("core_apps.users.urls")),
     path("api/v1/chats/", include("core_apps.chat.urls")),
+    path("api/v1/search/", include("core_apps.search.urls")),
 ]

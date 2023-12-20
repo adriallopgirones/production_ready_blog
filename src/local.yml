@@ -2,6 +2,15 @@
 version: "3.9"
 
 services:
+    es:
+        image: elasticsearch:7.17.9
+        environment:
+            - discovery.type=single-node
+        ports:
+            - "9200:9200"
+        networks:
+            - authors-api
+
     api:
         image: django_image # Basically gives a name/tag to the image
         build:
@@ -26,6 +35,7 @@ services:
         depends_on:
             - postgres
             - redis
+            - es
         networks:
             - blogs-api
 

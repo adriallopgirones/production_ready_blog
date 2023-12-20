@@ -28,8 +28,24 @@ if not AM_I_IN_DOCKER_CONTAINER:
     env.read_env(django_env_local)
     env.read_env(postgres_env_local)
 
-
 DEBUG = env.bool("DJANGO_DEBUG", False)
+
+if not AM_I_IN_DOCKER_CONTAINER:
+    ELASTICSEARCH_DSL = {
+        "default": {
+            "hosts": "es:9200",
+        },
+    }
+else:
+    # When running from outside of docker, only use elasticsearch if the env variable is set
+    ELASTICSEARCH_DSL = None
+    ELASTICSEARCH_URL = env.str("ELASTICSEARCH_URL", None)
+    if ELASTICSEARCH_URL:
+        ELASTICSEARCH_DSL = {
+            "default": {
+                "hosts": env.str("ELASTICSEARCH_URL"),
+            },
+        }
 
 LOGGING = {
     "version": 1,
@@ -86,6 +102,8 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "channels",
+    "django_elasticsearch_dsl",
+    "django_elasticsearch_dsl_drf",
 ]
 
 LOCAL_APPS = [

@@ -14,7 +14,6 @@ class MessageViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
 
     def get_queryset(self):
-        print(self.request.query_params)
         room_group_name = self.request.query_params.get("room_group_name", None)
 
         if not room_group_name:
