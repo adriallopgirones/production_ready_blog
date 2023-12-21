@@ -27,7 +27,7 @@ class BlogPostDocumentView(DocumentViewSet):
     search_fields = ("title", "content", "sentiment")
 
     # We could filter by fields if we wanted to
-    # filter_fields = {}
+    filter_fields = {}
 
     suggester_fields = {
         "title": {

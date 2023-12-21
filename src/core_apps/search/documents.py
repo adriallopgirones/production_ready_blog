@@ -30,6 +30,7 @@ class BlogPostDocument(Document):
         When creating the indeces, ES will call this method automatically, because
         it is prefixed like 'prepare_<field_name>'
         """
+
         return instance.owner.public_profile.name
 
     class Index:

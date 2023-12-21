@@ -30,10 +30,10 @@ if not AM_I_IN_DOCKER_CONTAINER:
 
 DEBUG = env.bool("DJANGO_DEBUG", False)
 
-if not AM_I_IN_DOCKER_CONTAINER:
+if AM_I_IN_DOCKER_CONTAINER:
     ELASTICSEARCH_DSL = {
         "default": {
-            "hosts": "es:9200",
+            "hosts": "http://es:9200",
         },
     }
 else:
@@ -46,7 +46,6 @@ else:
                 "hosts": env.str("ELASTICSEARCH_URL"),
             },
         }
-
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,

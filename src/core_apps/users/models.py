@@ -10,7 +10,9 @@ class PublicProfile(BaseModel):
     Wraps a user in a PublicProfile that contain information that can be shared among other users
     """
 
-    owner = models.OneToOneField(User, on_delete=models.CASCADE)
+    owner = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="public_profile"
+    )
     name = models.TextField(max_length=150, blank=True, null=False)
     description = models.TextField(max_length=500, blank=True, null=False)
     # It stores it under MEDIA_ROOT/profile_pictures

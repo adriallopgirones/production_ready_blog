@@ -17,3 +17,9 @@ local-celery:
 
 local-redis:
 	redis-server
+
+create-es-index:
+	docker compose -f local.yml exec api python manage.py search_index --create
+	
+populate-es-index:
+	docker compose -f local.yml exec api python manage.py search_index --populate

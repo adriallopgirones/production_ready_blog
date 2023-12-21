@@ -1,13 +1,10 @@
-from django.urls import path
+from django.urls import include, path
+from rest_framework import routers
 
 from core_apps.search.views import BlogPostDocumentView
 
+router = routers.DefaultRouter()
+router.register(r"", BlogPostDocumentView, basename="blog_post_document")
 urlpatterns = [
-    path(
-        "",
-        BlogPostDocumentView.as_view(
-            {"get": "list"}
-        ),  # Maps GET method to list action in the view, and only handles GET requests
-        name="article_search",
-    )
+    path("", include(router.urls)),
 ]

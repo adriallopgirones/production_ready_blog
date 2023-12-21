@@ -9,7 +9,7 @@ services:
         ports:
             - "9200:9200"
         networks:
-            - authors-api
+            - blogs-api
 
     api:
         image: django_image # Basically gives a name/tag to the image
@@ -70,6 +70,7 @@ services:
             - ./.envs/.local/.django
             - ./.envs/.local/.postgres
         depends_on:
+            - es
             - api
             - redis
             - postgres
@@ -83,11 +84,12 @@ services:
         #     dockerfile: ./docker/local/django/Dockerfile
         command: /start-daphne
         volumes:
-            - .:/app
+            - .:/app:z
         env_file:
             - ./.envs/.local/.django
             - ./.envs/.local/.postgres
         depends_on:
+            - es
             - api
             - redis
             - postgres
