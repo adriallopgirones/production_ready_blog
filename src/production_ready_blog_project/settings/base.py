@@ -101,9 +101,10 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "channels",
-    "django_elasticsearch_dsl",
-    "django_elasticsearch_dsl_drf",
 ]
+
+if ELASTICSEARCH_DSL:
+    THIRD_PARTY_APPS += ["django_elasticsearch_dsl", "django_elasticsearch_dsl_drf"]
 
 LOCAL_APPS = [
     "core_apps.blogs",
